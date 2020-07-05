@@ -19,7 +19,7 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane pickOnBounds="false" prefHeight="396.0" prefWidth="569.0">
+      <Pane pickOnBounds="false" prefHeight="701.0" prefWidth="913.0">
          <children>
             <ImageView fx:id="icon1" fitHeight="25.0" fitWidth="34.0" layoutX="272.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" visible="false">
 
@@ -31,13 +31,15 @@
             <Label layoutX="46.0" layoutY="89.0" text="Логин" />
             <Label layoutX="46.0" layoutY="142.0" text="Пароль" />
             <Button fx:id="btn" layoutX="146.0" layoutY="192.0" mnemonicParsing="false" onAction="#click" text="Подключиться" />
-            <TableView layoutX="7.0" layoutY="231.0" prefHeight="161.0" prefWidth="561.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-                  <TableColumn prefWidth="90.0" text="Column X" />
-              </columns>
-            </TableView>
+            <TableView fx:id="table" layoutX="-1.0" layoutY="231.0" prefHeight="321.0" prefWidth="913.0">
+               <columns>
+                  <TableColumn id="fullRussNameCol" prefWidth="236.0" text="ФИО" />
+                  <TableColumn id="firstNameCol" prefWidth="122.0" text="Имя" />
+                  <TableColumn id="middleNameCol" prefWidth="163.0" text="Отчество" />
+                  <TableColumn id="lastNameCol" prefWidth="156.0" text="Фамилия" />
+               </columns></TableView>
+
+
          </children>
       </Pane>
    </children>
