@@ -6,6 +6,8 @@ import com.imperva.ddc.service.DirectoryConnectorService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +19,11 @@ public class Controller {
     @FXML private TextField loginName;
     @FXML private TextField loginPass;
     @FXML private ImageView icon1;
+    @FXML private TableView<UserAccount> table;
+    @FXML private TableColumn<UserAccount, String> fullRussNameCol;
+    @FXML private TableColumn<UserAccount, String> firstNameCol;
+    @FXML private TableColumn<UserAccount, String> middleNameCol;
+    @FXML private TableColumn<UserAccount, String> lastNameCol;
 
 
 
