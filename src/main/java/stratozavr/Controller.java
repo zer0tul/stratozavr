@@ -25,6 +25,9 @@ public class Controller {
     @FXML private TableColumn<UserAccount, String> firstNameCol;
     @FXML private TableColumn<UserAccount, String> middleNameCol;
     @FXML private TableColumn<UserAccount, String> lastNameCol;
+    @FXML private TextField newUser;
+    @FXML private Button addButton;
+    @FXML private Button deleteButton;
 
     private Main main;
 
@@ -63,4 +66,15 @@ public class Controller {
             icon1.setVisible(true);
         }
     }
+    @FXML private void clickAddButton(ActionEvent event) {
+        if (!newUser.getText().equals("")) {
+            main.getPersonData().add(new UserAccount(newUser.getText()));
+            newUser.setText("");
+        }
+    }
+    @FXML private void clickDeleteButton(ActionEvent event) {
+        int selectedIndex = table.getSelectionModel().getSelectedIndex();
+        table.getItems().remove(selectedIndex);
+    }
+
 }
