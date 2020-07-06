@@ -14,8 +14,34 @@ public class UserAccount {
         this.lastName = this.fullRussName.split(" ")[0];
         this.firstName = this.fullRussName.split(" ")[1];
         this.middleName = this.fullRussName.split(" ")[2];
-        this.sAMAccountName = "TEST";
+        this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
     }
+
+    public void resetUserAccount(String fullRussName) {
+        this.fullRussName = fullRussName;
+        this.lastName = this.fullRussName.split(" ")[0];
+        this.firstName = this.fullRussName.split(" ")[1];
+        this.middleName = this.fullRussName.split(" ")[2];
+        this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
+    }
+
+    public String genSAMAccountName(String firstName, String middleName, String lastName) {
+        String str = firstName.substring(0, 1).toLowerCase() + "." + middleName.substring(0,1).toLowerCase() + "." + lastName.toLowerCase();
+        return translit(str);
+    }
+
+    public String translit(String str) {
+        String rusLit = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.";
+        String[] entLit = {"a", "b","v","g","d","e","e","zh","z","i","y","k","l","m","n","o","p","r","s","t","u","f","h","ts","ch","sh","sch","","y","","e","yu","ya","."};
+        String newString="";
+        for (int i = 0; i < str.length(); i++) {
+            newString = newString + entLit[rusLit.indexOf(str.charAt(i))];
+        }
+        System.out.println(newString);
+
+        return newString;
+    }
+
     public Long getCode() {
         return code;
     }
@@ -54,5 +80,13 @@ public class UserAccount {
 
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
+    }
+
+    public void setSAMAccountName(String sAMAccountName) {
+        this.sAMAccountName = sAMAccountName;
+    }
+
+   public String getSAMAccountName() {
+        return sAMAccountName;
     }
 }

@@ -5,13 +5,12 @@ import com.imperva.ddc.core.query.Endpoint;
 import com.imperva.ddc.service.DirectoryConnectorService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.graalvm.compiler.lir.LIRInstruction;
 
 public class Controller {
 
@@ -25,6 +24,7 @@ public class Controller {
     @FXML private TableColumn<UserAccount, String> firstNameCol;
     @FXML private TableColumn<UserAccount, String> middleNameCol;
     @FXML private TableColumn<UserAccount, String> lastNameCol;
+    @FXML private TableColumn<UserAccount, String> sAMAccountNameCol;
     @FXML private TextField newUser;
     @FXML private Button addButton;
     @FXML private Button deleteButton;
@@ -36,11 +36,23 @@ public class Controller {
     }
 
     @FXML private void initialize() {
-        System.out.println("First");
+        table.setEditable(true);
+        System.out.println(table.isEditable());
         fullRussNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullRussName"));
+        fullRussNameCol.setCellFactory(TextFieldTableCell.<UserAccount> forTableColumn());
+        fullRussNameCol.setMinWidth(200);
+        fullRussNameCol.setOnEditCommit((TableColumn.CellEditEvent<UserAccount, String> event) -> {
+            TablePosition<UserAccount, String> pos = event.getTablePosition();
+            String newFullRussName = event.getNewValue();
+            int row = pos.getRow();
+            UserAccount userAccount = event.getTableView().getItems().get(row);
+            userAccount.resetUserAccount(newFullRussName);
+            table.refresh();
+        });
         lastNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("lastName"));
         firstNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("firstName"));
         middleNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("middleName"));
+        sAMAccountNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("sAMAccountName"));
     }
 
     public void setMain(Main main) {

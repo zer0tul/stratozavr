@@ -37,11 +37,12 @@
                   <TableColumn fx:id="firstNameCol" prefWidth="122.0" text="Имя" />
                   <TableColumn fx:id="middleNameCol" prefWidth="163.0" text="Отчество" />
                   <TableColumn fx:id="lastNameCol" prefWidth="156.0" text="Фамилия" />
+                  <TableColumn fx:id="sAMAccountNameCol" prefWidth="184.0" text="Логин" />
                </columns>
             </TableView>
             <TextField fx:id="newUser" layoutX="46.0" layoutY="650.0" prefHeight="25.0" prefWidth="397.0" />
             <Button fx:id="addButton" layoutX="503.0" layoutY="650.0" mnemonicParsing="false" onAction="#clickAddButton" text="Добавить" />
-            <Button fx:id="deleteButton" layoutX="625.0" layoutY="650.0" mnemonicParsing="false" text="Удалить запись" onAction="#clickDeleteButton" />
+            <Button fx:id="deleteButton" layoutX="625.0" layoutY="650.0" mnemonicParsing="false" onAction="#clickDeleteButton" text="Удалить запись" />
 
 
          </children>
