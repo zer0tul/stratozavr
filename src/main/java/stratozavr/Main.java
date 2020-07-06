@@ -12,22 +12,41 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
     private Stage primaryStage;
     private ObservableList<UserAccount> personData = FXCollections.observableArrayList();
 
+    public Main() {
+        personData.add(new UserAccount("Иванов Петр Максимович"));
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/Main.fxml"));
+
         primaryStage.setTitle("Hello World");
-        Scene myScene = new Scene(root);
-        primaryStage.setScene(myScene);
+        showPerson();
 
 
+    }
 
-        primaryStage.show();
-        primaryStage.setResizable(false);
+    public void showPerson() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/Main.fxml"));
+            Parent root = loader.load();
+            Scene myScene = new Scene(root);
+            primaryStage.setScene(myScene);
+            primaryStage.show();
+            primaryStage.setResizable(false);
+            Controller controller = loader.getController();
+            controller.setMain(this);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Stage getPrimaryStage() {

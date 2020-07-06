@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="Maven: com.imperva.ddc:ddc-service:7.3.6.0.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.imperva.ddc:ddc-core:7.3.6.0.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.directory.api:api-all:1.0.0-RC2" level="project" />
@@ -24,6 +25,5 @@
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.antlr:2.7.7_5" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
-    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>

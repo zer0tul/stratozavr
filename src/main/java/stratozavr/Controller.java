@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -25,7 +26,25 @@ public class Controller {
     @FXML private TableColumn<UserAccount, String> middleNameCol;
     @FXML private TableColumn<UserAccount, String> lastNameCol;
 
+    private Main main;
 
+    public Controller() {
+
+    }
+
+    @FXML private void initialize() {
+        System.out.println("First");
+        fullRussNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullRussName"));
+        lastNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("lastName"));
+        firstNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("firstName"));
+        middleNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("middleName"));
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
+
+        table.setItems(this.main.getPersonData());
+    }
 
     @FXML
     private void click(ActionEvent event) {
