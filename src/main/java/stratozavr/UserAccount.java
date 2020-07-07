@@ -1,7 +1,13 @@
 package stratozavr;
 
+import com.imperva.ddc.core.query.ConnectionResponse;
+import com.imperva.ddc.core.query.FieldType;
+import com.imperva.ddc.core.query.ObjectType;
+import com.imperva.ddc.service.DirectoryConnectorService;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import static com.imperva.ddc.service.DirectoryConnectorService.resolveDistinguishedName;
 
 public class UserAccount {
     private Long code;
@@ -19,8 +25,16 @@ public class UserAccount {
         this.firstName = this.fullRussName.split(" ")[1];
         this.middleName = this.fullRussName.split(" ")[2];
         this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
-        this.resultImg = new ImageView(new Image(this.getClass().getResourceAsStream("/iconNoCheck.png")));
+       // ConnectionResponse connectionResponse = DirectoryConnectorService.authenticate(Connection.getEndpoint());
+        String urlImg = "/iconNoCheck.png";
+        if (Connection.getEndpoint() != null) {
+            String DN = resolveDistinguishedName(this.sAMAccountName, FieldType.LOGON_NAME, ObjectType.USER, Connection.getEndpoint());
 
+            if (DN == null) urlImg = "/iconCheck.png";
+            else urlImg = "/iconFalse.png";
+        }
+        this.resultImg = new ImageView(new Image(this.getClass().getResourceAsStream(urlImg)));
+        System.out.println(Connection.getEndpoint());
     }
 
     public void resetUserAccount(String fullRussName) {
@@ -29,6 +43,14 @@ public class UserAccount {
         this.firstName = this.fullRussName.split(" ")[1];
         this.middleName = this.fullRussName.split(" ")[2];
         this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
+        String urlImg = "/iconNoCheck.png";
+        if (Connection.getEndpoint() != null) {
+            String DN = resolveDistinguishedName(this.sAMAccountName, FieldType.LOGON_NAME, ObjectType.USER, Connection.getEndpoint());
+
+            if (DN == null) urlImg = "/iconCheck.png";
+            else urlImg = "/iconFalse.png";
+        }
+        this.resultImg = new ImageView(new Image(this.getClass().getResourceAsStream(urlImg)));
     }
 
     public String genSAMAccountName(String firstName, String middleName, String lastName) {

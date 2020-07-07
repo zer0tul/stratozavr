@@ -2,6 +2,8 @@ package stratozavr;
 
 import com.imperva.ddc.core.query.ConnectionResponse;
 import com.imperva.ddc.core.query.Endpoint;
+import com.imperva.ddc.core.query.FieldType;
+import com.imperva.ddc.core.query.ObjectType;
 import com.imperva.ddc.service.DirectoryConnectorService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +13,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.graalvm.compiler.lir.LIRInstruction;
+
+import static com.imperva.ddc.service.DirectoryConnectorService.resolveDistinguishedName;
 
 public class Controller {
 
@@ -81,6 +85,10 @@ public class Controller {
             icon1.setImage(image);
             icon1.setVisible(true);
         }
+        String DN = resolveDistinguishedName("zer0tul1", FieldType.LOGON_NAME, ObjectType.USER, endpoint);
+        System.out.println(endpoint);
+        System.out.println(Connection.getEndpoint());
+
     }
     @FXML private void clickAddButton(ActionEvent event) {
         if (!newUser.getText().equals("")) {
