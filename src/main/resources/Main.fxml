@@ -19,7 +19,7 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Pane pickOnBounds="false" prefHeight="701.0" prefWidth="913.0">
+      <Pane pickOnBounds="false" prefHeight="791.0" prefWidth="1055.0">
          <children>
             <ImageView fx:id="icon1" fitHeight="25.0" fitWidth="34.0" layoutX="272.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" visible="false">
 
@@ -31,13 +31,14 @@
             <Label layoutX="46.0" layoutY="89.0" text="Логин" />
             <Label layoutX="46.0" layoutY="142.0" text="Пароль" />
             <Button fx:id="btn" layoutX="146.0" layoutY="192.0" mnemonicParsing="false" onAction="#click" text="Подключиться" />
-            <TableView fx:id="table" layoutX="-1.0" layoutY="231.0" prefHeight="399.0" prefWidth="913.0">
+            <TableView fx:id="table" layoutX="-1.0" layoutY="231.0" prefHeight="399.0" prefWidth="1055.0">
                <columns>
                   <TableColumn fx:id="fullRussNameCol" prefWidth="236.0" text="ФИО" />
                   <TableColumn fx:id="firstNameCol" prefWidth="122.0" text="Имя" />
                   <TableColumn fx:id="middleNameCol" prefWidth="163.0" text="Отчество" />
                   <TableColumn fx:id="lastNameCol" prefWidth="156.0" text="Фамилия" />
-                  <TableColumn fx:id="sAMAccountNameCol" prefWidth="184.0" text="Логин" />
+                  <TableColumn fx:id="sAMAccountNameCol" prefWidth="150.0" text="Логин" />
+                  <TableColumn fx:id="resultImgCol" editable="false" prefWidth="43.0" resizable="false" sortable="false" text="Result" />
                </columns>
             </TableView>
             <TextField fx:id="newUser" layoutX="46.0" layoutY="650.0" prefHeight="25.0" prefWidth="397.0" />

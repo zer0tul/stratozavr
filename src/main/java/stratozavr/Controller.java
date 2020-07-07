@@ -25,9 +25,11 @@ public class Controller {
     @FXML private TableColumn<UserAccount, String> middleNameCol;
     @FXML private TableColumn<UserAccount, String> lastNameCol;
     @FXML private TableColumn<UserAccount, String> sAMAccountNameCol;
+    @FXML private TableColumn<UserAccount, String> resultImgCol;
     @FXML private TextField newUser;
     @FXML private Button addButton;
     @FXML private Button deleteButton;
+
 
     private Main main;
 
@@ -53,6 +55,8 @@ public class Controller {
         firstNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("firstName"));
         middleNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("middleName"));
         sAMAccountNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("sAMAccountName"));
+        resultImgCol.setCellValueFactory(new PropertyValueFactory<>("resultImg"));
+        resultImgCol.setStyle("-fx-alignment: CENTER;");
     }
 
     public void setMain(Main main) {

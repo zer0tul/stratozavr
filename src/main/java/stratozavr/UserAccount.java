@@ -1,5 +1,8 @@
 package stratozavr;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public class UserAccount {
     private Long code;
     private String fullRussName;
@@ -7,6 +10,7 @@ public class UserAccount {
     private String middleName;
     private String lastName;
     private String sAMAccountName;
+    private ImageView resultImg;
 
     public UserAccount(String fullRussName) {
         this.fullRussName = fullRussName;
@@ -15,6 +19,8 @@ public class UserAccount {
         this.firstName = this.fullRussName.split(" ")[1];
         this.middleName = this.fullRussName.split(" ")[2];
         this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
+        this.resultImg = new ImageView(new Image(this.getClass().getResourceAsStream("/iconNoCheck.png")));
+
     }
 
     public void resetUserAccount(String fullRussName) {
@@ -88,5 +94,13 @@ public class UserAccount {
 
    public String getSAMAccountName() {
         return sAMAccountName;
+    }
+
+    public ImageView getResultImg() {
+        return resultImg;
+    }
+
+    public void setResultImg(ImageView resultImg) {
+        this.resultImg = resultImg;
     }
 }
