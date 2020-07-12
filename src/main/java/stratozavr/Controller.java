@@ -12,7 +12,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import org.graalvm.compiler.lir.LIRInstruction;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+//import org.graalvm.compiler.lir.LIRInstruction;
+
+import java.io.FileReader;
+import java.io.IOException;
 
 import static com.imperva.ddc.service.DirectoryConnectorService.resolveDistinguishedName;
 
@@ -61,6 +68,7 @@ public class Controller {
         sAMAccountNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("sAMAccountName"));
         resultImgCol.setCellValueFactory(new PropertyValueFactory<>("resultImg"));
         resultImgCol.setStyle("-fx-alignment: CENTER;");
+        loadJSONSettings();
     }
 
     public void setMain(Main main) {
@@ -100,5 +108,23 @@ public class Controller {
         int selectedIndex = table.getSelectionModel().getSelectedIndex();
         table.getItems().remove(selectedIndex);
     }
+
+    private void loadJSONSettings() {
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = null;
+        try {
+            Object obj = jsonParser.parse(new FileReader("c:\\Temp\\server.json"));
+            jsonObject = (JSONObject) obj;
+            String server = (String) jsonObject.get("server");
+            String username = (String) jsonObject.get("username");
+            String password = (String) jsonObject.get("password");
+           serverIP.setText(server);
+           loginName.setText(username);
+           loginPass.setText(password);
+        }
+        catch (IOException e) {e.printStackTrace();}
+        catch (ParseException e) {e.printStackTrace();}
+    }
+
 
 }

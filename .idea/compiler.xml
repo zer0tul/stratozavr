@@ -19,6 +19,8 @@
         <module name="stratozavr" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="stratozavr" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
