@@ -18,8 +18,15 @@ import org.json.simple.parser.ParseException;
 
 //import org.graalvm.compiler.lir.LIRInstruction;
 
+import javax.naming.ldap.LdapContext;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.imperva.ddc.service.DirectoryConnectorService.resolveDistinguishedName;
 
@@ -28,7 +35,8 @@ public class Controller {
     @FXML private Button btn;
     @FXML private TextField serverIP;
     @FXML private TextField loginName;
-    @FXML private TextField loginPass;
+    @FXML private PasswordField loginPass;
+    @FXML private TextField domainName;
     @FXML private ImageView icon1;
     @FXML private TableView<UserAccount> table;
     @FXML private TableColumn<UserAccount, String> fullRussNameCol;
@@ -40,6 +48,12 @@ public class Controller {
     @FXML private TextField newUser;
     @FXML private Button addButton;
     @FXML private Button deleteButton;
+    @FXML private Button loadFromDekanatButton;
+    @FXML private Label loadCount;
+    private String sqlInstanceName;
+    private String sqlDataBaseName;
+    private String sqlUsername;
+    private String sqlUserPass;
 
 
     private Main main;
@@ -50,7 +64,7 @@ public class Controller {
 
     @FXML private void initialize() {
         table.setEditable(true);
-        System.out.println(table.isEditable());
+        //System.out.println(table.isEditable());
         fullRussNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullRussName"));
         fullRussNameCol.setCellFactory(TextFieldTableCell.<UserAccount> forTableColumn());
         fullRussNameCol.setMinWidth(200);
@@ -79,7 +93,7 @@ public class Controller {
 
     @FXML
     private void click(ActionEvent event) {
-        Endpoint endpoint = Connection.createEndpoint(serverIP.getText(),389,loginName.getText(),loginPass.getText(),false);
+        Endpoint endpoint = Connection.createEndpoint(serverIP.getText(),389,loginName.getText() + "@" + domainName.getText(),loginPass.getText(),false);
         ConnectionResponse connectionResponse = DirectoryConnectorService.authenticate(endpoint);
         boolean succeeded = !connectionResponse.isError();
         if (succeeded) {
@@ -93,10 +107,23 @@ public class Controller {
             icon1.setImage(image);
             icon1.setVisible(true);
         }
-        String DN = resolveDistinguishedName("zer0tul1", FieldType.LOGON_NAME, ObjectType.USER, endpoint);
-        System.out.println(endpoint);
-        System.out.println(Connection.getEndpoint());
+        //String DN = resolveDistinguishedName("Administrator", FieldType.LOGON_NAME, ObjectType.USER, endpoint);
+        //System.out.println(DN);
+        //System.out.println(Connection.getEndpoint());
 
+
+        try{
+            LdapContext ctx = ActiveDirectoryNew.getConnection(loginName.getText(), loginPass.getText(), domainName.getText(), serverIP.getText());
+            ActiveDirectoryNew.User user = ActiveDirectoryNew.getUser("a.a.abramovich", ctx);
+
+           // ctx.close();
+            //System.out.println(ActiveDirectoryNew.getContext());
+            System.out.println(user);
+        }
+        catch(Exception e){
+            //Failed to authenticate user!
+            e.printStackTrace();
+        }
     }
     @FXML private void clickAddButton(ActionEvent event) {
         if (!newUser.getText().equals("")) {
@@ -109,6 +136,39 @@ public class Controller {
         table.getItems().remove(selectedIndex);
     }
 
+    @FXML private void clickLoadFromDekanatButton(ActionEvent event) {
+        String connectionUrl = "jdbc:sqlserver://%1$s;databaseName=%2$s;user=%3$s;password=%4$s;";
+        String connectionString = String.format(connectionUrl, this.sqlInstanceName, this.sqlDataBaseName, this.sqlUsername, this.sqlUserPass);
+        try {
+            // Подключение к базе данных
+            java.sql.Connection con = DriverManager.getConnection(connectionString);
+            // Отправка запроса на выборку и получение результатов
+            Statement stmt = con.createStatement();
+            ResultSet executeQuery = stmt.executeQuery("SELECT TOP 4000 Код, Фамилия, Имя, Отчество, Статус, Год_Поступления FROM Деканат.dbo.Все_Студенты WHERE Статус=4");
+            // Обход результатов выборки
+            int loadedCount = 0;
+            while (executeQuery.next()) {
+                loadedCount++;
+                String lastName = executeQuery.getString("Фамилия").trim();
+                String firstName = executeQuery.getString("Имя").trim();
+                String middleName = executeQuery.getString("Отчество");
+                String name;
+                if (middleName == null) name = lastName + " " + firstName;
+                else name = lastName + " " + firstName + " " + middleName.trim();
+                main.getPersonData().add(new UserAccount(name));
+                System.out.println(executeQuery.getString("Код") + " " + name);
+            }
+            // Закрываем соединение
+            executeQuery.close();
+            stmt.close();
+            con.close();
+            loadCount.setText(String.valueOf(loadedCount));
+        } catch (SQLException ex) {
+            // Обработка исключений
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private void loadJSONSettings() {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = null;
@@ -118,9 +178,15 @@ public class Controller {
             String server = (String) jsonObject.get("server");
             String username = (String) jsonObject.get("username");
             String password = (String) jsonObject.get("password");
+            String domain = (String) jsonObject.get("domain");
+            this.sqlInstanceName = (String) jsonObject.get("instancename");
+            this.sqlDataBaseName = (String) jsonObject.get("databasename");
+            this.sqlUsername = (String) jsonObject.get("sqlusername");
+            this.sqlUserPass = (String) jsonObject.get("sqluserpass");
            serverIP.setText(server);
            loginName.setText(username);
            loginPass.setText(password);
+           this.domainName.setText(domain);
         }
         catch (IOException e) {e.printStackTrace();}
         catch (ParseException e) {e.printStackTrace();}

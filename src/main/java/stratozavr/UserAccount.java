@@ -7,6 +7,11 @@ import com.imperva.ddc.service.DirectoryConnectorService;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javax.naming.NamingException;
+import javax.naming.PartialResultException;
+import javax.naming.ldap.InitialLdapContext;
+import javax.naming.ldap.LdapContext;
+
 import static com.imperva.ddc.service.DirectoryConnectorService.resolveDistinguishedName;
 
 public class UserAccount {
@@ -23,18 +28,20 @@ public class UserAccount {
         this.code = Long.valueOf(0);
         this.lastName = this.fullRussName.split(" ")[0];
         this.firstName = this.fullRussName.split(" ")[1];
-        this.middleName = this.fullRussName.split(" ")[2];
+        if (this.fullRussName.split(" ").length == 2) this.middleName = "";
+        else this.middleName = this.fullRussName.split(" ")[2];
         this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
        // ConnectionResponse connectionResponse = DirectoryConnectorService.authenticate(Connection.getEndpoint());
         String urlImg = "/iconNoCheck.png";
-        if (Connection.getEndpoint() != null) {
-            String DN = resolveDistinguishedName(this.sAMAccountName, FieldType.LOGON_NAME, ObjectType.USER, Connection.getEndpoint());
-
-            if (DN == null) urlImg = "/iconCheck.png";
+        InitialLdapContext context = ActiveDirectoryNew.getContext();
+        if (context != null) {
+            ActiveDirectoryNew.User user = ActiveDirectoryNew.getUser(this.sAMAccountName, context);
+            //System.out.println(user);
+            if (user == null) urlImg = "/iconCheck.png";
             else urlImg = "/iconFalse.png";
         }
         this.resultImg = new ImageView(new Image(this.getClass().getResourceAsStream(urlImg)));
-        System.out.println(Connection.getEndpoint());
+        //System.out.println(context);
     }
 
     public void resetUserAccount(String fullRussName) {
@@ -44,28 +51,38 @@ public class UserAccount {
         this.middleName = this.fullRussName.split(" ")[2];
         this.sAMAccountName = genSAMAccountName(firstName, middleName, lastName);
         String urlImg = "/iconNoCheck.png";
-        if (Connection.getEndpoint() != null) {
-            String DN = resolveDistinguishedName(this.sAMAccountName, FieldType.LOGON_NAME, ObjectType.USER, Connection.getEndpoint());
-
-            if (DN == null) urlImg = "/iconCheck.png";
+        InitialLdapContext context = ActiveDirectoryNew.getContext();
+        if (context != null) {
+            ActiveDirectoryNew.User user = null;
+            try {
+                user = ActiveDirectoryNew.getUser(this.sAMAccountName, context);
+            }
+            catch (Exception e) {}
+           // System.out.println(user);
+            if (user == null) urlImg = "/iconCheck.png";
             else urlImg = "/iconFalse.png";
         }
         this.resultImg = new ImageView(new Image(this.getClass().getResourceAsStream(urlImg)));
     }
 
     public String genSAMAccountName(String firstName, String middleName, String lastName) {
-        String str = firstName.substring(0, 1).toLowerCase() + "." + middleName.substring(0,1).toLowerCase() + "." + lastName.toLowerCase();
-        return translit(str);
+        firstName = translit(firstName.toLowerCase());
+        lastName = translit(lastName.toLowerCase());
+        if (!middleName.equals("")) middleName = translit(middleName.toLowerCase());
+        String str = "";
+        if (middleName.equals("")) str =  firstName.substring(0, 1) + "." + lastName;
+        else str = firstName.substring(0, 1) + "." + middleName.substring(0,1) + "." + lastName;
+        return str;
     }
 
     public String translit(String str) {
-        String rusLit = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.";
-        String[] entLit = {"a", "b","v","g","d","e","e","zh","z","i","y","k","l","m","n","o","p","r","s","t","u","f","h","ts","ch","sh","sch","","y","","e","yu","ya","."};
+        String rusLit = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.-";
+        String[] entLit = {"a", "b","v","g","d","e","e","zh","z","i","y","k","l","m","n","o","p","r","s","t","u","f","h","ts","ch","sh","sch","","y","","e","yu","ya",".","-"};
         String newString="";
         for (int i = 0; i < str.length(); i++) {
             newString = newString + entLit[rusLit.indexOf(str.charAt(i))];
         }
-        System.out.println(newString);
+       // System.out.println(newString);
 
         return newString;
     }
