@@ -26,7 +26,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
 
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Студенты и домен");
         showPerson();
 
 
